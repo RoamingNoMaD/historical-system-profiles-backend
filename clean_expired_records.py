@@ -12,7 +12,7 @@ def main():
     logger = listener_logging.initialize_logging()
     start_metrics_server(config.listener_metrics_port)
     app = create_app()
-    logger.warn(
+    logger.info(
         "starting expired record cleaning loop, will remove records older than "
         "%s days every %s minutes"
         % (config.valid_profile_age_days, config.expired_cleaner_sleep_minutes)

@@ -88,12 +88,13 @@ def event_loop(flask_app, consumer, ptc, logger, delay_seconds):
         probes._update_readiness_state()
         while True:
             time.sleep(delay_seconds)
+            logger.info("Deleter event loop running")
             probes._update_liveness_state()
             for data in consumer:
                 try:
-                    logger.debug(("kafka message recieved: '%s'", str(data)))
+                    logger.debug(("kafka message received: '%s'", str(data)))
                     if data.value["type"] == "delete":
                         _delete_profiles(data, ptc, logger)
                 except Exception:
                     _emit_delete_error(data, ptc)
-                    logger.exception("An error occurred during message processing")
+                    logger.error("An error occurred during message processing")

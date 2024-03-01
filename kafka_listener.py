@@ -15,7 +15,7 @@ from historical_system_profiles.app import create_app
 
 def main():
     logger = listener_logging.initialize_logging()
-    logger.error("starting %s listener" % config.listener_type)
+    logger.info("starting %s listener" % config.listener_type)
 
     start_metrics_server(config.listener_metrics_port)
 
@@ -37,8 +37,8 @@ def init_consumer(queue, logger):
         f"creating {'secure' if config.enable_kafka_ssl else 'normal'} consumer "
         f"of {queue} with kafka_group_id {config.kafka_group_id}"
     )
-    logger.info(f"kafka max poll interval (msec): {config.kafka_max_poll_interval_ms}")
-    logger.info(f"kafka max poll records: {config.kafka_max_poll_records}")
+    logger.debug(f"kafka max poll interval (msec): {config.kafka_max_poll_interval_ms}")
+    logger.debug(f"kafka max poll records: {config.kafka_max_poll_records}")
     if config.enable_kafka_ssl:
         logger.info("Creating Consumer with SSL")
         consumer = KafkaConsumer(

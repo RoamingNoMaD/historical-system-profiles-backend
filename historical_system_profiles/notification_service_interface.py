@@ -52,7 +52,7 @@ class NotificationServiceInterface:
             self.logger.warning("NotificationServiceInterface not initialized.")
             return
         self.producer.send(self.notification_service_topic, event.message)
-        self.logger.audit("Sent baseline drift notification message", success=True)
+        self.logger.info("Sent baseline drift notification message")
 
 
 class _NotificationEventBase:

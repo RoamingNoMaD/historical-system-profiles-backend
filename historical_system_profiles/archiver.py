@@ -62,15 +62,15 @@ def _archive_profile(data, ptc, logger, notification_service):
     """
 
     if not data.value or not isinstance(data.value, dict):
-        logger.info("skipping message where data.value is empty or not a dict")
+        logger.warning("skipping message where data.value is empty or not a dict")
         return
 
     if "type" not in data.value:
-        logger.info("skipping message that does not have a type")
+        logger.warning("skipping message that does not have a type")
         return
 
     if data.value["type"] not in ("created", "updated"):
-        logger.info("skipping message that is not created or updated type")
+        logger.warning("skipping message that is not created or updated type")
         return
 
     service_auth_key = None
@@ -258,12 +258,12 @@ def event_loop(flask_app, consumer, ptc, logger, delay_seconds):
         probes._update_readiness_state()
         while True:
             time.sleep(delay_seconds)
-            logger.debug("Event loop running")
+            logger.info("Archiver event loop running")
             probes._update_liveness_state()
             for data in consumer:
-                logger.debug("Data found, processing kafka message")
                 try:
-                    logger.debug(("kafka message recieved: '%s'", str(data)))
+                    logger.debug(("kafka message received: '%s'", str(data)))
                     _archive_profile(data, ptc, logger, notification_service)
                 except Exception:
                     _emit_archiver_error(data, ptc, logger)
+                    logger.error("An error occurred during message processing")

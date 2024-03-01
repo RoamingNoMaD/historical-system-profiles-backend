@@ -36,7 +36,7 @@ def create_connexion_app():
     flask_app = connexion_app.app
 
     # set up logging ASAP
-    setup_audit_logging(logging.Logger)
+    setup_audit_logging()
 
     gunicorn_logger = logging.getLogger("gunicorn.error")
     flask_app.logger.handlers = gunicorn_logger.handlers
