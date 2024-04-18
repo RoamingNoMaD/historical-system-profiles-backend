@@ -13,7 +13,7 @@ class DBInterfaceTests(utils.ApiTest):
             "/api/historical-system-profiles/v1/systems/29dbe6ce-897f-11ea-8f75-98fa9b07d419",
             headers=fixtures.AUTH_HEADER,
         )
-        data = json.loads(response.data)
+        data = json.loads(response.content)
         self.assertEqual(response.status_code, 404)
 
         # add one record, confirm count
@@ -25,7 +25,7 @@ class DBInterfaceTests(utils.ApiTest):
             "/api/historical-system-profiles/v1/systems/29dbe6ce-897f-11ea-8f75-98fa9b07d419",
             headers=fixtures.AUTH_HEADER,
         )
-        data = json.loads(response.data)
+        data = json.loads(response.content)
         self.assertEquals(1, len(data["data"][0]["profiles"]))
 
         # delete all records, confirm count
@@ -37,5 +37,5 @@ class DBInterfaceTests(utils.ApiTest):
             "/api/historical-system-profiles/v1/systems/29dbe6ce-897f-11ea-8f75-98fa9b07d419",
             headers=fixtures.AUTH_HEADER,
         )
-        data = json.loads(response.data)
+        data = json.loads(response.content)
         self.assertEqual(response.status_code, 404)

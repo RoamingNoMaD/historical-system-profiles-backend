@@ -16,7 +16,7 @@ class HSPApiTests(utils.ApiTest):
             headers=fixtures.AUTH_HEADER,
         )
         self.assertEqual(response.status_code, 400)
-        self.assertIn("too short", json.loads(response.data)["detail"])
+        self.assertIn("too short", json.loads(response.content)["detail"])
 
     def test_duplicate_uuid(self):
         response = self.client.get(
@@ -39,7 +39,7 @@ class HSPApiTests(utils.ApiTest):
             "/api/historical-system-profiles/v1/systems/6887d404-ab27-11ea-b3ae-98fa9b07d419",
             headers=fixtures.AUTH_HEADER,
         )
-        data = json.loads(response.data)
+        data = json.loads(response.content)
         self.assertEqual(response.status_code, 404)
 
         # add one record, confirm count
@@ -50,7 +50,7 @@ class HSPApiTests(utils.ApiTest):
             "/api/historical-system-profiles/v1/systems/6887d404-ab27-11ea-b3ae-98fa9b07d419",
             headers=fixtures.AUTH_HEADER,
         )
-        data = json.loads(response.data)
+        data = json.loads(response.content)
         self.assertEquals(1, len(data["data"][0]["profiles"]))
 
         # delete all records, confirm count
@@ -61,7 +61,7 @@ class HSPApiTests(utils.ApiTest):
             "/api/historical-system-profiles/v1/systems/6887d404-ab27-11ea-b3ae-98fa9b07d419",
             headers=fixtures.AUTH_HEADER,
         )
-        data = json.loads(response.data)
+        data = json.loads(response.content)
         self.assertEqual(response.status_code, 404)
 
     def test_missing_single_hsp(self):
@@ -82,7 +82,7 @@ class HSPApiTests(utils.ApiTest):
             "/api/historical-system-profiles/v1/systems/eca1c5c4-ab27-11ea-958a-98fa9b07d419",
             headers=fixtures.AUTH_HEADER,
         )
-        data = json.loads(response.data)
+        data = json.loads(response.content)
         valid_profile_id = data["data"][0]["profiles"][0]["id"]
 
         # NB: we are fetching individual profiles now, not the list of profiles for the system
@@ -128,7 +128,7 @@ class HSPApiTests(utils.ApiTest):
             headers=fixtures.AUTH_HEADER,
         )
 
-        data = json.loads(response.data)
+        data = json.loads(response.content)
         self.assertEqual(response.status_code, 200)
         self.assertEquals(2, len(data["data"][0]["profiles"]))
 

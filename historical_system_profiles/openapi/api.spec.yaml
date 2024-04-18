@@ -13,18 +13,6 @@ servers:
   - url: "{{ path_prefix }}{{ app_name }}/v1"
 
 paths:
-  /version:
-    get:
-      summary: get the service version
-      description: "get the service version"
-      operationId: historical_system_profiles.views.v1.get_version
-      responses:
-        '200':
-          description: a service version
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Version'
   /systems/{inventory_id}:
     parameters:
       - $ref: '#/components/parameters/InventoryId'
@@ -84,6 +72,18 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/InternalServerError'
+  /version:
+    get:
+      summary: get the service version
+      description: "get the service version"
+      operationId: historical_system_profiles.views.v1.get_version
+      responses:
+        '200':
+          description: a service version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Version'
 components:
   responses:
     InternalServerError:

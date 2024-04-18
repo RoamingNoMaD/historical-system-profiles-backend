@@ -22,7 +22,7 @@ class ApiTest(unittest.TestCase):
 
         test_connexion_app = app.create_app()
         self.test_flask_app = test_connexion_app.app
-        self.client = self.test_flask_app.test_client()
+        self.client = test_connexion_app.test_client()
 
     def addInventoryRecord(self, inventory_id, display_name):
         self.patched_fetch_systems.return_value.append(
