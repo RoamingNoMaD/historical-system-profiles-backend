@@ -46,8 +46,8 @@ packages = []
 
 [tool.poetry.dependencies]
 python = "^3.9"
-connexion = {extras = ["swagger-ui"], version = "*"}
-kerlescan = {git = "https://github.com/RedHatInsights/kerlescan.git", rev = "0.118", develop = true}
+connexion = {extras = ["swagger-ui", "flask", "uvicorn"], version = "*"}
+kerlescan = {git = "https://github.com/RedHatInsights/kerlescan.git", rev = "0.119", develop = true}
 prometheus-client = "*"
 gunicorn = "*"
 flask-sqlalchemy = "*"
@@ -59,6 +59,7 @@ kafka-python = "*"
 logstash-formatter = "*"
 python-dateutil = "*"
 pytz = "*"
+uvicorn = "^0.29.0"
 
 
 [tool.poetry.group.dev.dependencies]

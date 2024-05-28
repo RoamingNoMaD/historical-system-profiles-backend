@@ -1,6 +1,6 @@
 import logging
 
-import connexion
+from connexion import FlaskApp
 
 from flask_migrate import Migrate
 from kerlescan import config as kerlescan_config
@@ -27,13 +27,19 @@ def create_app():
 
 def create_connexion_app():
     openapi_args = {
-        "path_prefix": kerlescan_config.path_prefix,
-        "app_name": app_config.get_app_name(),
+        "path_prefix": kerlescan_config.path_prefix.strip("/"),
+        "app_name": app_config.get_app_name().strip("/"),
     }
-    connexion_app = connexion.App(__name__, specification_dir="openapi/", arguments=openapi_args)
-    connexion_app.add_api("api.spec.yaml", strict_validation=True, validate_responses=True)
-    connexion_app.add_api("mgmt_api.spec.yaml", strict_validation=True)
+
+    connexion_app = FlaskApp(__name__, specification_dir="openapi/")
+
     flask_app = connexion_app.app
+    flask_app.url_map.strict_slashes = True  # it needs to be set before add_api call
+
+    connexion_app.add_api(
+        "api.spec.yaml", arguments=openapi_args, strict_validation=True, validate_responses=True
+    )
+    connexion_app.add_api("mgmt_api.spec.yaml", strict_validation=True)
 
     # set up logging ASAP
     setup_audit_logging()
@@ -42,7 +48,10 @@ def create_connexion_app():
     flask_app.logger.handlers = gunicorn_logger.handlers
     flask_app.logger.setLevel(gunicorn_logger.level)
     setup_cw_logging(flask_app.logger, logging.getLogger("gunicorn.access"), gunicorn_logger)
+
     register_hsts_response(flask_app)
+
+    connexion_app.add_error_handler(HTTPError, handle_http_error)
 
     # set up DB
     engine_options = {
@@ -62,7 +71,6 @@ def create_connexion_app():
     db.init_app(flask_app)
 
     flask_app.register_blueprint(v1.section)
-    flask_app.register_error_handler(HTTPError, handle_http_error)
     return connexion_app
 
 
